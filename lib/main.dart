@@ -10,6 +10,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MakhaneRush',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Montserrat'
+      ),
       home: Text("Hello World"),
     );
   }
