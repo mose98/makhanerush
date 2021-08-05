@@ -19,6 +19,7 @@ class MyTheme{
     fontFamily: 'Montserrat',
     iconTheme: IconThemeData(color: Color(0xFFE7EEFB)),
     buttonColor: Color(0xFF5D6884),
+    accentColor: Colors.teal
   );
 
   static final lightTheme = ThemeData(
@@ -28,5 +29,6 @@ class MyTheme{
     fontFamily: 'Montserrat',
     iconTheme: IconThemeData(color: Color(0xFF323E57)),
     buttonColor: Color(0xFFB4BBC6),
+    accentColor: Colors.lightBlue
   );
 }
