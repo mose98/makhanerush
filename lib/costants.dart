@@ -221,7 +221,7 @@ Route CreateRoute(Widget page) {
   );
 }
 
-ShowToastError(String message) {
+ShowToastError({String message}) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
@@ -233,7 +233,7 @@ ShowToastError(String message) {
   );
 }
 
-ShowToastMessage(String message) {
+ShowToastMessage({String message}) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,
@@ -245,7 +245,7 @@ ShowToastMessage(String message) {
   );
 }
 
-ShowToastDone(String message) {
+ShowToastDone({String message}) {
   Fluttertoast.showToast(
     msg: message,
     toastLength: Toast.LENGTH_LONG,

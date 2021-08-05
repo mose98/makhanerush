@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:makhanerush/pages/home.dart';
 import 'package:makhanerush/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:stacked_themes/stacked_themes.dart';
 
 void main() {
   runApp(MyApp());

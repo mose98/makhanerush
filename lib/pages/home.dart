@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:makhanerush/widgets/buttons/google_sign_in_button.dart';
 import 'package:makhanerush/widgets/buttons/theme_button.dart';
+import 'package:makhanerush/widgets/login_form.dart';
+import 'package:makhanerush/widgets/signup_form.dart';
 
 import '../costants.dart';
 
@@ -32,11 +34,38 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   bool isAuth = false;
+  AuthType authType = AuthType.LOGIN;
+  AnimationController _controller;
+  double _scale;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 100,
+      ),
+      lowerBound: 0.0,
+      upperBound: 0.1,
+    )..addListener(() {
+        setState(() {});
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    _scale = 1 - _controller.value;
     return isAuth ? buildAuthScreen() : buildUnAuthScreen();
   }
 
@@ -47,10 +76,10 @@ class _HomeState extends State<Home> {
   Widget buildUnAuthScreen() {
     var theme = Theme.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         shadowColor: theme.scaffoldBackgroundColor,
-
         actions: [
           ChangeThemeButtonWidget(),
         ],
@@ -60,22 +89,6 @@ class _HomeState extends State<Home> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Align(
-            //   alignment: Alignment.topCenter,
-            //   child: ClipPath(
-            //     clipper: CustomAppbarShape(),
-            //     // this is my own class which extendsCustomClipper
-            //     child: Container(
-            //       color: theme.primaryColor,
-            //       height: MediaQuery.of(context).devicePixelRatio * 150,
-            //       child: MediaQuery.of(context).platformBrightness == Brightness.dark ? Lottie.asset('assets/lotties/appbardarkmode.json', width: double.infinity, fit: BoxFit.cover) : Lottie.asset('assets/lotties/appbarlightmode.json', width: double.infinity, fit: BoxFit.cover),
-            //     ),
-            //   ),
-            // ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Lottie.asset('assets/lotties/investiment.json', width: double.infinity, fit: BoxFit.cover),
-            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -87,17 +100,16 @@ class _HomeState extends State<Home> {
                   width: MediaQuery.of(context).size.width * 0.80,
                   child: DefaultTextStyle(
                     style: TextStyle(fontSize: 40),
-                    child: ColorizeAnimatedTextKit(
-                      colors: [
-                        theme.textTheme.bodyText1.color,
-                        theme.primaryColorLight
-                      ],
-                      speed: Duration(milliseconds: 200),
-                      textAlign: TextAlign.center,
+                    child: AnimatedTextKit(
                       repeatForever: true,
-                      textStyle: TextStyle(fontSize: 40, color: theme.textTheme.bodyText1.color, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
-                      text: [
-                        'MakhaneRush'
+                      animatedTexts: [
+                        ColorizeAnimatedText(
+                          'MakhaneRush',
+                          textStyle: TextStyle(fontSize: 40, color: theme.textTheme.bodyText1.color, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
+                          colors: [theme.textTheme.bodyText1.color, theme.primaryColorLight],
+                          speed: Duration(milliseconds: 200),
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
                   ),
@@ -106,30 +118,88 @@ class _HomeState extends State<Home> {
                   width: MediaQuery.of(context).size.width * 0.80,
                   child: DefaultTextStyle(
                     style: TextStyle(fontSize: 40),
-                    child: TypewriterAnimatedTextKit(
-                      speed: Duration(milliseconds: 200),
-                      textAlign: TextAlign.center,
+                    child: AnimatedTextKit(
                       repeatForever: true,
-                      textStyle: TextStyle(color: theme.textTheme.bodyText1.color, fontWeight: FontWeight.w600, fontFamily: 'Montserrat'),
-                      text: [
-                        'Think the impossible',
-                        'There\'s no limit'
+                      animatedTexts: [
+                        TypewriterAnimatedText(
+                          'Think the impossible',
+                          textStyle: TextStyle(color: theme.textTheme.bodyText1.color, fontWeight: FontWeight.w600, fontFamily: 'Montserrat', fontSize: 13),
+                          textAlign: TextAlign.center,
+                          speed: Duration(milliseconds: 100),
+                        ),
+                        TypewriterAnimatedText(
+                          'There\'s no limit',
+                          textStyle: TextStyle(color: theme.textTheme.bodyText1.color, fontWeight: FontWeight.w600, fontFamily: 'Montserrat', fontSize: 13),
+                          textAlign: TextAlign.center,
+                          speed: Duration(milliseconds: 100),
+                        )
                       ],
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.40,
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: GoogleSignInButton(),
-                )
               ],
+            ),
+            authType == AuthType.LOGIN
+                ? Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: double.infinity,
+                      child: LogInFormField(function: () {
+                        setState(() {
+                          authType = AuthType.SIGNUP;
+                        });
+                      }),
+                    ),
+                  )
+                : Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      width: double.infinity,
+                      child: SignUpFormField(
+                        function: () {
+                          setState(() {
+                            authType = AuthType.LOGIN;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      "oppure accedi con",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ),
+                  Listener(
+                    onPointerDown: (PointerDownEvent event) {
+                      _controller.forward();
+                    },
+                    onPointerUp: (PointerUpEvent event) {
+                      _controller.reverse();
+                    },
+                    child: Transform.scale(
+                      scale: _scale,
+                      child: GoogleSignInButton(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+enum AuthType {
+  LOGIN,
+  SIGNUP,
+  PHONE,
 }
