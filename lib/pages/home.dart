@@ -89,6 +89,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.70,
+                decoration: BoxDecoration(
+                  color: theme.primaryColorLight,
+                  borderRadius: BorderRadius.horizontal(left: Radius.circular(80), right: Radius.circular(80)),
+                ),
+              ),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
