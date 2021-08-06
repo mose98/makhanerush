@@ -1,13 +1,15 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
+import 'package:makhanerush/provider/authentication.dart';
 import 'package:makhanerush/widgets/buttons/google_sign_in_button.dart';
 import 'package:makhanerush/widgets/buttons/theme_button.dart';
 import 'package:makhanerush/widgets/login_form.dart';
 import 'package:makhanerush/widgets/signup_form.dart';
 
-import '../costants.dart';
+final googleSignIn = GoogleSignIn();
 
 class CustomAppbarShape extends CustomClipper<Path> {
   @override
@@ -40,6 +42,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController _controller;
   double _scale;
 
+  login(){
+    googleSignIn.signIn();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,6 +59,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     )..addListener(() {
         setState(() {});
       });
+
+    googleSignIn.onCurrentUserChanged.listen((account){
+      if(account != null){
+        print('User signed in! : $account');
+        setState(() {
+          isAuth = true;
+        });
+      }
+      else{
+        setState(() {
+          isAuth = false;
+        });
+      }
+    });
+
     super.initState();
   }
 
@@ -192,6 +213,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     },
                     onPointerUp: (PointerUpEvent event) {
                       _controller.reverse();
+                      Authentication.signInWithGoogle(context: context, googleSignIn: googleSignIn);
                     },
                     child: Transform.scale(
                       scale: _scale,

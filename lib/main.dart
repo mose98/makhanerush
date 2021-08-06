@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:makhanerush/pages/home.dart';
+import 'package:makhanerush/provider/authentication.dart';
 import 'package:makhanerush/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -8,8 +9,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    //Authentication.initializeFirebase();
     return ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
       builder: (context, _) {
